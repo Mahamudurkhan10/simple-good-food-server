@@ -36,6 +36,35 @@ async function run() {
       const result = await menusCollections.insertOne(body)
       res.send(result)
    })
+   app.get('/menu/:id',async(req,res)=>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await menusCollections.findOne(query)
+        res.send(result)
+   })
+   app.put('/menuUpdate/:id', async(req,res)=>{
+     const id = req.params.id;
+     const query = { _id: new ObjectId(id) };
+     const options = { upsert: true };
+     const updateMenu = req.body;
+     const updated = {
+       $set: {
+          foodName : updateMenu.foodName,
+          image : updateMenu.image,
+          price : updateMenu.price,
+          protein : updateMenu.protein,
+          carbs : updateMenu.carbs,
+          fat : updateMenu.fat,
+          description : updateMenu.description,
+          ingredients : updateMenu.ingredients,
+          instructions : updateMenu.instructions,
+          category : updateMenu.category,
+          meal : updateMenu.meal
+       }
+     };
+     const result = await menusCollections.updateOne(query, updated, options);
+     res.send(result);
+   })
    app.delete('/menuDelete/:id',async(req,res)=>{
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
